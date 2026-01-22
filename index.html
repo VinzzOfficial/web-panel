@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Bot WA</title>
+
+<style>
+body {
+  font-family: 'Courier New', monospace;
+  background-color: #0a0a0a;
+  color: #00ffcc;
+  text-align: center;
+  padding: 20px;
+}
+h1 { color: #ff0033; }
+.container {
+  width: 80%;
+  margin: auto;
+  background: #111;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #00ffcc;
+}
+
+input, button, select {
+  width: 90%;
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  font-size: 16px;
+}
+
+input, select {
+  background: #222;
+  color: #fff;
+  ox-sizing: border-box;
+}
+
+button {
+  background: #00ffcc;
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+}
+button:hover { background: #009977; }
+pre {
+  background: #222;
+  padding: 10px;
+  text-align: left;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #00ffcc;
+  padding: 5px;
+}
+th {
+  background: #333;
+}
+.hidden { display:none; }
+a { color:#00ffcc; }
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox" class="container">
+  <h1>🔐 LOGIN</h1>
+  <input id="loginUser" placeholder="Username">
+  <input id="loginPass" type="password" placeholder="Password">
+  <button onclick="login()">LOGIN</button>
+  <p style="margin-top:15px">
+    Belum punya akun? hubungi admin  
+    <a href="https://wa.me/6283832320022" target="_blank">Chat</a>
+  </p>
+</div>
+
+<!-- PANEL -->
+<div id="panelBox" class="hidden">
+
+<h1>⚡ BUAT PANEL BOT WHATSAPP ⚡</h1>
+
+<div class="container">
+
+  <input id="username" placeholder="Username Panel">
+
+  <select id="ramSelect">
+    <option value="">-- Pilih Paket --</option>
+    <option value="1">1GB</option>
+    <option value="2">2GB</option>
+    <option value="3">3GB</option>
+    <option value="4">4GB</option>
+    <option value="5">5GB</option>
+    <option value="6">6GB</option>
+    <option value="7">7GB</option>
+    <option value="8">8GB</option>
+    <option value="9">9GB</option>
+    <option value="10">10GB</option>
+    <option value="0">Unlimited</option>
+  </select>
+
+  <button onclick="createPanel()">🚀 Buat Panel</button>
+
+  <h3>📜 RIWAYAT CREATE</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Status Server</th>
+      </tr>
+    </thead>
+    <tbody id="history"></tbody>
+  </table>
+
+  <pre id="log"></pre>
+
+</div>
+</div>
+
+<script>
+// KONFIGURASI API BARU
+const WRAPPER_API = "https://payment.zpr0.com/api/pterodactyl/create2";
+const PANEL_DOMAIN = "https://panel-private.vinzzoffc.my.id";
+const API_KEY = "ptla_KzlfVdWNJ6AVD12VgeqG6E3sBNo2Epp6wxScBXu2XCc";
+
+// Default Config
+const LOCATION_ID = 1;
+const EGG_ID = 15;
+const NEST_ID = 5;
+
+function log(t) {
+  document.getElementById("log").textContent += t + "\n";
+}
+
+async function createPanel() {
+  const username = document.getElementById("username").value.trim();
+  const ramVal = document.getElementById("ramSelect").value;
+
+  if (!username) return alert("Username kosong");
+  if (ramVal === "") return alert("Pilih RAM");
+
+  log("=== MEMULAI PROSES CREATE ===");
+  log(`Mengirim request ke API untuk user: ${username}...`);
+
+  // Konversi RAM (jika 0 maka 0/unlimited, jika tidak kali 1024)
+  const ramMB = ramVal == 0 ? 0 : ramVal * 1024;
+  
+  // Susun URL dengan Query Parameters sesuai dokumentasi API
+  const requestUrl = `${WRAPPER_API}?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&loc=${LOCATION_ID}&eggid=${EGG_ID}&nestid=${NEST_ID}&ram=${ramMB}&disk=10000&cpu=0&username=${encodeURIComponent(username)}`;
+
+  try {
+    const response = await fetch(requestUrl, {
+      method: "GET" // API endpoint menggunakan query params (GET)
+    });
+    
+    const data = await response.json();
+
+    if (!data.status) {
+        log(`[ERROR] ${data.message}`);
+        if(data.detail) log(`Detail: ${JSON.stringify(data.detail)}`);
+        return alert("Gagal: " + data.message);
+    }
+
+    // Jika Berhasil
+    const res = data.result;
+    const acc = res.account_info;
+    const newSrv = res.new_server_created;
+    const owned = res.owned_servers_list;
+
+    log(`\n[INFO AKUN]`);
+    log(`ID       : ${acc.id}`);
+    log(`Username : ${acc.username}`);
+    log(`Email    : ${acc.email}`);
+    log(`Password : ${acc.password}`);
+    
+    log(`\n[SERVER BARU DIBUAT]`);
+    log(`Nama     : ${newSrv.name}`);
+    log(`Limit    : RAM ${newSrv.limits.ram} | Disk ${newSrv.limits.disk}`);
+
+    // Format List Server untuk Log
+    log(`\n[TOTAL SERVER DIMILIKI: ${res.total_owned_servers}]`);
+    
+    // Mapping list server agar rapi di log
+    const serverListString = owned.map(s => {
+        return `\n- [ID:${s.id}] ${s.name} (${s.status})\n  Limits: ${s.limits_formatted}`;
+    }).join("");
+
+    log(serverListString);
+    log("----------------------------------------");
+    log("Selesai.");
+
+    // Update Tabel Riwayat
+    const tr = document.createElement("tr");
+    
+    // Tentukan tampilan password (jika user lama, password tidak berubah)
+    const passDisplay = acc.password.includes("Unchanged") ? "(User Lama)" : acc.password;
+    
+    tr.innerHTML = `
+        <td>${acc.username}</td>
+        <td>${passDisplay}</td>
+        <td>Total: ${res.total_owned_servers} Server</td>
+    `;
+    document.getElementById("history").appendChild(tr);
+
+    alert(`Sukses! Server berhasil dibuat. Total server user sekarang: ${res.total_owned_servers}`);
+
+  } catch (e) {
+    console.error(e);
+    log(`[FATAL ERROR] Gagal menghubungi API Wrapper.`);
+    alert("Terjadi kesalahan koneksi.");
+  }
+}
+
+let users = JSON.parse(localStorage.getItem("users")) || {};
+let currentLogin = localStorage.getItem("loginUser");
+
+// kalau user login tapi sudah dihapus → paksa logout
+if(currentLogin && !users[currentLogin]){
+  localStorage.removeItem("loginUser");
+  currentLogin = null;
+}
+
+// tampilkan halaman awal
+if(currentLogin){
+  showPanel();
+}else{
+  showLogin();
+}
+
+function showLogin(){
+  loginBox.classList.remove("hidden");
+  panelBox.classList.add("hidden");
+}
+
+function showPanel(){
+  loginBox.classList.add("hidden");
+  panelBox.classList.remove("hidden");
+}
+
+function login(){
+  const u = loginUser.value.trim();
+  const p = loginPass.value.trim();
+
+  if(!users[u]){
+    return alert("Akun tidak ditemukan, silakan register dulu");
+  }
+
+  if(users[u] !== p){
+    return alert("Password salah");
+  }
+
+  localStorage.setItem("loginUser", u);
+  showPanel();
+}
+</script>
+
+</body>
+</html>

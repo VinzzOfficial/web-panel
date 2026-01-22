@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Panel Login</title>
+
+<style>
+body {
+  font-family: 'Courier New', monospace;
+  background:#0a0a0a;
+  color:#00ffcc;
+  text-align:center;
+  padding:20px;
+}
+h1 { color:#ff0033; }
+
+.container {
+  width:80%;
+  margin:auto;
+  background:#111;
+  padding:20px;
+  border-radius:8px;
+  box-shadow:0 0 15px #00ffcc;
+}
+
+input, button {
+  width:90%;
+  padding:10px;
+  margin:5px 0;
+  border:none;
+  font-size:16px;
+}
+input {
+  background:#222;
+  color:#fff;
+}
+button {
+  background:#00ffcc;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:hover { background:#009977; }
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+th, td {
+  border:1px solid #00ffcc;
+  padding:2px;
+}
+
+.hidden { display:none; }
+</style>
+</head>
+
+<body>
+
+<div id="userManager" class="container" style="margin-top:20px">
+  <h1>👥 USER MANAGER</h1>
+
+  <input id="newUser" placeholder="Username baru">
+  <input id="newPass" placeholder="Password baru">
+  <button onclick="addUser()">➕ TAMBAH USER</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="userList"></tbody>
+  </table>
+
+  <button onclick="clearUsers()" style="background:#ff0033;color:#fff">
+    🗑️ CLEAR SEMUA USER
+  </button>
+</div>
+
+<script>
+let users = JSON.parse(localStorage.getItem("users")) || {};
+
+function saveUsers(){
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
+function renderUsers(){
+  const ul = document.getElementById("userList");
+  ul.innerHTML = "";
+  for(let u in users){
+    ul.innerHTML += `
+      <tr>
+        <td>${u}</td>
+        <td>${users[u]}</td>
+        <td>
+          <button onclick="deleteUser('${u}')" style="background:#ff0033;color:#fff">
+            HAPUS
+          </button>
+        </td>
+      </tr>
+    `;
+  }
+}
+
+function addUser(){
+  const u = newUser.value.trim();
+  const p = newPass.value.trim();
+  if(!u || !p) return alert("User & pass wajib diisi");
+  if(users[u]) return alert("User sudah ada");
+
+  users[u] = p;
+  saveUsers();
+  renderUsers();
+
+  alert("Register berhasil, silakan login");
+}
+
+function deleteUser(u){
+  if(!confirm("Hapus user "+u+"?")) return;
+
+  // jika user yang dihapus sedang login → logout
+  if(localStorage.getItem("loginUser") === u){
+    localStorage.removeItem("loginUser");
+  }
+
+  delete users[u];
+  saveUsers();
+  renderUsers();
+}
+
+function clearUsers(){
+  if(!confirm("HAPUS SEMUA USER???")) return;
+
+  users = {};
+  saveUsers();
+
+  // paksa semua user logout
+  localStorage.removeItem("loginUser");
+
+  renderUsers();
+}
+
+renderUsers();
+</script>
+
+</body>
+</html>
