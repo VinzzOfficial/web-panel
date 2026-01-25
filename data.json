@@ -12,6 +12,12 @@
       "password": "1",
       "role": "developer",
       "lock": "dev"
+    },
+    {
+      "username": "vinzz",
+      "password": "1",
+      "role": "admin",
+      "lock": true
     }
   ]
 }
