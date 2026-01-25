@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>i'm? vinzz</title>
+
+<style>
+body {
+  font-family: 'Courier New', monospace;
+  background-color: #0a0a0a;
+  color: #00ffcc;
+  text-align: center;
+  padding: 20px;
+}
+h1,h2 { color: #ff0033; }
+.container {
+  width: 80%;
+  margin: auto;
+  background: #111;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #00ffcc;
+}
+
+input, button, select {
+  width: 90%;
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  font-size: 16px;
+}
+
+input, select {
+  background: #222;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+button {
+  background: #00ffcc;
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+}
+button:hover { background:#009977; }
+.hidden { display:none; }
+table { width:100%; border-collapse:collapse; }
+th,td { border: 2px solid #00ffcc; padding:0px; }
+th { background: #333; }
+pre { background:#222; padding:10px; text-align:left; overflow-x: auto; }
+a { color:#00ffcc; }
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox" class="container">
+  <h2>🔐 LOGIN PANEL</h2>
+  <input id="loginUser" placeholder="Username">
+  <input id="loginPass" type="password" placeholder="Password">
+  <button onclick="login()">LOGIN</button>
+  <p style="margin-top:15px">
+    Belum punya akun? hubungi admin  
+    <a href="https://wa.me/6283832320022" target="_blank">Chat</a>
+  </p>
+</div>
+
+<!-- USER PANEL -->
+<div id="userPanel" class="container hidden">
+<h2>⚡ User Panel</h2>
+  
+  <input id="username" placeholder="Username">
+
+  <select id="ramSelect">
+    <option value="">-- Pilih Ram --</option>
+    <option value="1">1GB</option>
+    <option value="2">2GB</option>
+    <option value="3">3GB</option>
+    <option value="4">4GB</option>
+    <option value="5">5GB</option>
+    <option value="6">6GB</option>
+    <option value="7">7GB</option>
+    <option value="8">8GB</option>
+    <option value="9">9GB</option>
+    <option value="10">10GB</option>
+    <option value="0">Unlimited</option>
+  </select>
+
+  <button onclick="createPanel()">🚀 Create Panel</button>
+  <div style="text-align:right;font-size:12px;opacity:0.6;">
+  <a href="#" onclick="logout()">logout</a>
+  </div>
+</div>
+  <h1></h1>
+<div id="userPanelV2" class="container hidden">
+<h3>📜 RIWAYAT CREATE</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Link login</th>
+      </tr>
+    </thead>
+    <tbody id="history"></tbody>
+  </table>
+  <pre id="log"></pre>
+  <p style="margin-top:15px">
+    ada kendala eror? hubungi developer
+    <a href="https://wa.me/6283832320022" target="_blank">Chat</a>
+  </p>
+</div>
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="container hidden">
+  <h2>🛠️ Admin Panel</h2>
+
+  <input id="usernameV2" placeholder="Username">
+
+  <select id="ramSelectV2">
+    <option value="">-- Pilih Ram --</option>
+    <option value="1">1GB</option>
+    <option value="2">2GB</option>
+    <option value="3">3GB</option>
+    <option value="4">4GB</option>
+    <option value="5">5GB</option>
+    <option value="6">6GB</option>
+    <option value="7">7GB</option>
+    <option value="8">8GB</option>
+    <option value="9">9GB</option>
+    <option value="10">10GB</option>
+    <option value="0">Unlimited</option>
+  </select>
+
+  <button onclick="createPanelV2()">🚀 Create Panel</button>
+  <button onclick="createAdmin()">✨ Create Admin Panel</button>
+
+  <hr>
+
+  <button onclick="listServers()">📜 List Server</button>
+  <button onclick="deleteServer()">🗑️ Delete Server</button>
+  <div style="text-align:right;font-size:12px;opacity:0.6;">
+  <a href="#" onclick="logout()">logout</a>
+  </div>
+</div>
+<h1></h1>
+<div id="adminPanelV2" class="container hidden">
+<h3>📜 RIWAYAT CREATE</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Link login</th>
+      </tr>
+    </thead>
+    <tbody id="historyV2"></tbody>
+  </table>
+
+  <pre id="adminLog"></pre>
+</div>
+
+<!-- DEVELOPER PANEL -->
+<div id="devPanel" class="container hidden">
+  <h2>👑 Developer Panel</h2>
+
+  <input id="usernameV3" placeholder="Username">
+
+  <select id="ramSelectV3">
+    <option value="">-- Pilih Ram --</option>
+    <option value="1">1GB</option>
+    <option value="2">2GB</option>
+    <option value="3">3GB</option>
+    <option value="4">4GB</option>
+    <option value="5">5GB</option>
+    <option value="6">6GB</option>
+    <option value="7">7GB</option>
+    <option value="8">8GB</option>
+    <option value="9">9GB</option>
+    <option value="10">10GB</option>
+    <option value="0">Unlimited</option>
+  </select>
+
+  <button onclick="createPanelV3()">🚀 Create Panel</button>
+  <button onclick="createAdminV2()">✨ Create Admin Panel</button>
+
+  <hr>
+
+  <button onclick="listServersV2()">📜 List Server</button>
+  <button onclick="deleteServerV2()">🗑️ Delete Server</button>
+  <button onclick="deleteAdmin()">❌ Delete Admin</button>
+  <button onclick="clearServer()">🔥 Clear All</button>
+  <div style="text-align:right;font-size:12px;opacity:0.6;">
+  <a href="#" onclick="logout()">logout</a>
+  </div>
+</div>
+<h1></h1>
+<div id="devPanelV2" class="container hidden">
+<h3>📜 RIWAYAT CREATE</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Login</th>
+      </tr>
+    </thead>
+    <tbody id="historyV3"></tbody>
+  </table>
+  
+  <pre id="devLog"></pre>
+</div>
+
+<div id="regmenu" class="container hidden">
+<h1>📝 REGISTER USER</h1>
+
+<input id="regUser" placeholder="Username">
+<input id="regPass" type="password" placeholder="Password">
+
+<select id="regRole">
+  <option value="user">User</option>
+  <option value="admin">Admin</option>
+</select>
+
+<button onclick="register()">➕ REGISTER</button>
+<button onclick="clearUser()">🔥 CLEAR USER</button>
+
+<table>
+<thead>
+<tr>
+  <th>USER</th>
+  <th>PASS</th>
+  <th>ROLE</th>
+  <th>AKSI</th>
+</tr>
+</thead>
+<tbody id="userList"></tbody>
+</table>
+
+<pre id="regLog"></pre>
+<div style="text-align:right;font-size:12px;opacity:0.6;">
+<a href="#" onclick="logout()">logout</a>
+</div>
+</div>
+
+<script>
+const DATA_URL="https://raw.githubusercontent.com/VinzzOfficial/web-panel/main/data.json";
+const loginBox=document.getElementById("loginBox");
+const GITHUB_OWNER="VinzzOfficial";
+const GITHUB_REPO="web-panel";
+const FILE_PATH="data.json";
+const GITHUB_TOKEN="g"+"h"+"p_"+"J3UOxEVs3vhsA8D1CqVTh4Ddjeff"+"qL3lNofr";
+
+function regLog(t){ document.getElementById("log").textContent+=t+"\n"; }
+async function loadData(){
+  const r=await fetch(
+    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${FILE_PATH}`,
+    {headers:{Authorization:`token ${GITHUB_TOKEN}`}}
+  );
+  const d=await r.json();
+  return {sha:d.sha,list:JSON.parse(atob(d.content)).data};
+}
+
+async function saveData(list,sha){
+  await fetch(
+    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${FILE_PATH}`,
+    {
+      method:"PUT",
+      headers:{
+        Authorization:`token ${GITHUB_TOKEN}`,
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        message:"update user",
+        content:btoa(JSON.stringify({success:true,data:list},null,2)),
+        sha
+      })
+    }
+  );
+}
+
+async function register(){
+  const u=regUser.value.trim();
+  const p=regPass.value.trim();
+  const r=regRole.value;
+
+  if(!u||!p) return alert("Lengkapi data");
+
+  const {list,sha}=await loadData();
+  if(list.find(x=>x.username===u)) return alert("Username sudah ada");
+
+  list.push({username:u,password:p,role:r,lock:r!=="user"});
+  await saveData(list,sha);
+
+  regUser.value="";
+  regPass.value="";
+  listUser();
+  log(`username: ${u} | password: ${p}\nrole: ${r} | status: succesadded`);
+}
+
+async function listUser(){
+  const {list} = await loadData();
+  const userList = document.getElementById("userList");
+  userList.innerHTML = "";
+
+  list.forEach(u => {
+    const disable = u.role === "developer" || u.role === "register";
+    userList.innerHTML += `
+      <tr>
+        <td>${u.username}</td>
+        <td>${u.password}</td>
+        <td>${u.role.toUpperCase()}</td>
+        <td>
+          <button ${disable ? "disabled" : ""} onclick="deleteUser('${u.username}')">Dell</button>
+        </td>
+      </tr>`;
+  });
+}
+
+async function deleteUser(username){
+  if(!confirm("Hapus user "+username+"?")) return;
+
+  const {list, sha} = await loadData();
+  const target = list.find(x => x.username === username);
+  
+  if(!target) return alert("User tidak ditemukan");
+  if(target.role === "developer" || target.role === "register") 
+    return alert("User dengan role developer atau register tidak bisa dihapus!");
+
+  // Hanya hapus user/admin
+  await saveData(list.filter(x => x.username !== username), sha);
+  listUser();
+  log("success delete "+username);
+}
+
+async function clearUser(){
+  if(!confirm("Hapus semua user dan admin (developer & register aman)?")) return;
+
+  const {list, sha} = await loadData();
+  // Hanya hapus user dan admin, developer & register tetap
+  const filtered = list.filter(u => u.role === "developer" || u.role === "register");
+  await saveData(filtered, sha);
+  listUser();
+  log('success clear user');
+}
+
+document.addEventListener("DOMContentLoaded",listUser);
+
+async function login(){
+  const u=loginUser.value.trim();
+  const p=loginPass.value.trim();
+  const r=await fetch(DATA_URL);
+  const j=await r.json();
+  const acc=j.data.find(x=>x.username===u&&x.password===p);
+  if(!acc) return alert("Login gagal");
+  localStorage.setItem("userLogin",JSON.stringify(acc));
+  init();
+}
+
+function init(){
+  document.querySelectorAll(".container").forEach(x=>x.classList.add("hidden"));
+  const s=localStorage.getItem("userLogin");
+  if(!s){ loginBox.classList.remove("hidden"); return; }
+  const me=JSON.parse(s);
+  if(me.role==="user"){ userPanel.classList.remove("hidden"); userPanelV2.classList.remove("hidden"); }
+  if(me.role==="admin"){ adminPanel.classList.remove("hidden"); adminPanelV2.classList.remove("hidden"); }
+  if(me.role==="developer"){ devPanel.classList.remove("hidden"); devPanelV2.classList.remove("hidden"); }
+  if(me.role==="register"){ regmenu.classList.remove("hidden"); }
+}
+
+function logout(){ localStorage.clear(); location.reload(); }
+
+init();
+//config
+const WRAPPER_API = "https://payment.zpr0.com/api/pterodactyl/create2";
+const PANEL_DOMAIN = "https://panel-private.vinzzoffc.my.id";
+const API_KEY = "ptla_KzlfVdWNJ6AVD12VgeqG6E3sBNo2Epp6wxScBXu2XCc";
+
+const LOCATION_ID = 1;
+const EGG_ID = 15;
+const NEST_ID = 5;
+
+// ================= CREATE PANEL =================
+function log(t){ document.getElementById("log").textContent+=t+"\n"; }
+const adminLogEl = document.getElementById("adminLog");
+function adminLog(t){ adminLogEl.textContent+=t+"\n"; }
+const devLogEl = document.getElementById("devLog");
+function devLog(t){ devLogEl.textContent+=t+"\n"; }
+
+async function createPanel() {
+  const username = document.getElementById("username").value.trim();
+  const ramVal = document.getElementById("ramSelect").value;
+
+  if (!username) return alert("Username kosong");
+  if (ramVal === "") return alert("Pilih RAM");
+
+  log("=== MEMULAI PROSES CREATE ===");
+  log(`Mengirim request ke API untuk user: ${username}...`);
+
+  // Konversi RAM (jika 0 maka 0/unlimited, jika tidak kali 1024)
+  const ramMB = ramVal == 0 ? 0 : ramVal * 1024;
+  
+  // Susun URL dengan Query Parameters sesuai dokumentasi API
+  const requestUrl = `${WRAPPER_API}?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&loc=${LOCATION_ID}&eggid=${EGG_ID}&nestid=${NEST_ID}&ram=${ramMB}&disk=10000&cpu=0&username=${encodeURIComponent(username)}`;
+
+  try {
+    const response = await fetch(requestUrl, {
+      method: "GET" // API endpoint menggunakan query params (GET)
+    });
+    
+    const data = await response.json();
+
+    if (!data.status) {
+        log(`[ERROR] ${data.message}`);
+        if(data.detail) log(`Detail: ${JSON.stringify(data.detail)}`);
+        return alert("Gagal: " + data.message);
+    }
+
+    // Jika Berhasil
+    const res = data.result;
+    const acc = res.account_info;
+    const newSrv = res.new_server_created;
+    const owned = res.owned_servers_list;
+
+    log(`\n[INFO AKUN]`);
+    log(`ID       : ${acc.id}`);
+    log(`Username : ${acc.username}`);
+    log(`Email    : ${acc.email}`);
+    log(`Password : ${acc.password}`);
+    log(`Domain   : ${PANEL_DOMAIN}`);
+    
+    log(`\n[SERVER BARU DIBUAT]`);
+    log(`Nama     : ${newSrv.name}`);
+    log(`Limit    : RAM ${newSrv.limits.ram} | Disk ${newSrv.limits.disk}`);
+
+    // Format List Server untuk Log
+    log(`\n[TOTAL SERVER DIMILIKI: ${res.total_owned_servers}]`);
+    
+    // Mapping list server agar rapi di log
+    const serverListString = owned.map(s => {
+        return `\n- [ID:${s.id}] ${s.name} (${s.status})\n  Limits: ${s.limits_formatted}`;
+    }).join("");
+
+    log(serverListString);
+    log("----------------------------------------");
+    log("Selesai.");
+
+    // Update Tabel Riwayat
+    const tr = document.createElement("tr");
+    
+    // Tentukan tampilan password (jika user lama, password tidak berubah)
+    const passDisplay =
+  acc.password && acc.password.includes("Unchanged")
+  ? "(User Lama)"
+  : acc.password || "-";
+
+    tr.innerHTML = `
+      <td>
+        ${acc.username}<br>
+        <a href="#" onclick="navigator.clipboard.writeText('${acc.username}');return false;">Copy</a>
+      </td>
+      <td>
+        ${passDisplay}<br>
+        <a href="#" onclick="navigator.clipboard.writeText('${passDisplay}');return false;">Copy</a>
+      </td>
+      <td>
+        <a href="${PANEL_DOMAIN}" target="_blank" class="login-link">domain</a>
+      </td>
+    `;
+    document.getElementById("history").appendChild(tr);
+
+    alert(`Sukses! Server berhasil dibuat. Total server user sekarang: ${res.total_owned_servers}`);
+
+  } catch (e) {
+    console.error(e);
+    log(`[FATAL ERROR] Gagal menghubungi API Wrapper.`);
+    alert("Terjadi kesalahan koneksi.");
+  }
+}
+
+async function createPanelV2() {
+  const username = document.getElementById("usernameV2").value.trim();
+  const ramVal = document.getElementById("ramSelectV2").value;
+
+  if (!username) return alert("Username kosong");
+  if (ramVal === "") return alert("Pilih RAM");
+
+  adminLog("=== MEMULAI PROSES CREATE ===");
+  adminLog(`Mengirim request ke API untuk user: ${username}...`);
+
+  // Konversi RAM (jika 0 maka 0/unlimited, jika tidak kali 1024)
+  const ramMB = ramVal == 0 ? 0 : ramVal * 1024;
+  
+  // Susun URL dengan Query Parameters sesuai dokumentasi API
+  const requestUrl = `${WRAPPER_API}?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&loc=${LOCATION_ID}&eggid=${EGG_ID}&nestid=${NEST_ID}&ram=${ramMB}&disk=10000&cpu=0&username=${encodeURIComponent(username)}`;
+
+  try {
+    const response = await fetch(requestUrl, {
+      method: "GET" // API endpoint menggunakan query params (GET)
+    });
+    
+    const data = await response.json();
+
+    if (!data.status) {
+        adminLog(`[ERROR] ${data.message}`);
+        if(data.detail) adminLog(`Detail: ${JSON.stringify(data.detail)}`);
+        return alert("Gagal: " + data.message);
+    }
+
+    // Jika Berhasil
+    const res = data.result;
+    const acc = res.account_info;
+    const newSrv = res.new_server_created;
+    const owned = res.owned_servers_list;
+
+    adminLog(`\n[INFO AKUN]`);
+    adminLog(`ID       : ${acc.id}`);
+    adminLog(`Username : ${acc.username}`);
+    adminLog(`Email    : ${acc.email}`);
+    adminLog(`Password : ${acc.password}`);
+    adminLog(`Domain   : ${PANEL_DOMAIN}`);
+    
+    adminLog(`\n[SERVER BARU DIBUAT]`);
+    adminLog(`Nama     : ${newSrv.name}`);
+    adminLog(`Limit    : RAM ${newSrv.limits.ram} | Disk ${newSrv.limits.disk}`);
+
+    // Format List Server untuk Log
+    adminLog(`\n[TOTAL SERVER DIMILIKI: ${res.total_owned_servers}]`);
+    
+    // Mapping list server agar rapi di log
+    const serverListString = owned.map(s => {
+        return `\n- [ID:${s.id}] ${s.name} (${s.status})\n  Limits: ${s.limits_formatted}`;
+    }).join("");
+
+    adminLog(serverListString);
+    adminLog("----------------------------------------");
+    adminLog("Selesai.");
+
+    // Update Tabel Riwayat
+    const tr = document.createElement("tr");
+    
+    // Tentukan tampilan password (jika user lama, password tidak berubah)
+    const passDisplayV2 =
+  acc.password && acc.password.includes("Unchanged")
+  ? "(User Lama)"
+  : acc.password || "-";
+
+    tr.innerHTML = `
+      <td>
+        ${acc.username}<br>
+        <a href="#" onclick="navigator.clipboard.writeText('${acc.username}');return false;">Copy</a>
+      </td>
+      <td>
+        ${passDisplayV2}<br>
+        <a href="#" onclick="navigator.clipboard.writeText('${passDisplayV2}');return false;">Copy</a>
+      </td>
+      <td>
+        <a href="${PANEL_DOMAIN}" target="_blank" class="login-link">domain</a>
+      </td>
+    `;
+    document.getElementById("historyV2").appendChild(tr);
+
+    alert(`Sukses! Server berhasil dibuat. Total server user sekarang: ${res.total_owned_servers}`);
+
+  } catch (e) {
+    console.error(e);
+    adminLog(`[FATAL ERROR] Gagal menghubungi API Wrapper.`);
+    alert("Terjadi kesalahan koneksi.");
+  }
+}
+
+async function createPanelV3() {
+  const username = document.getElementById("usernameV3").value.trim();
+  const ramVal = document.getElementById("ramSelectV3").value;
+
+  if (!username) return alert("Username kosong");
+  if (ramVal === "") return alert("Pilih RAM");
+
+  devLog("=== MEMULAI PROSES CREATE ===");
+  devLog(`Mengirim request ke API untuk user: ${username}...`);
+
+  // Konversi RAM (jika 0 maka 0/unlimited, jika tidak kali 1024)
+  const ramMB = ramVal == 0 ? 0 : ramVal * 1024;
+  
+  // Susun URL dengan Query Parameters sesuai dokumentasi API
+  const requestUrl = `${WRAPPER_API}?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&loc=${LOCATION_ID}&eggid=${EGG_ID}&nestid=${NEST_ID}&ram=${ramMB}&disk=10000&cpu=0&username=${encodeURIComponent(username)}`;
+
+  try {
+    const response = await fetch(requestUrl, {
+      method: "GET" // API endpoint menggunakan query params (GET)
+    });
+    
+    const data = await response.json();
+
+    if (!data.status) {
+        devLog(`[ERROR] ${data.message}`);
+        if(data.detail) devLog(`Detail: ${JSON.stringify(data.detail)}`);
+        return alert("Gagal: " + data.message);
+    }
+
+    // Jika Berhasil
+    const res = data.result;
+    const acc = res.account_info;
+    const newSrv = res.new_server_created;
+    const owned = res.owned_servers_list;
+
+    devLog(`\n[INFO AKUN]`);
+    devLog(`ID       : ${acc.id}`);
+    devLog(`Username : ${acc.username}`);
+    devLog(`Email    : ${acc.email}`);
+    devLog(`Password : ${acc.password}`);
+    devLog(`Domain   : ${PANEL_DOMAIN}`);
+    
+    devLog(`\n[SERVER BARU DIBUAT]`);
+    devLog(`Nama     : ${newSrv.name}`);
+    devLog(`Limit    : RAM ${newSrv.limits.ram} | Disk ${newSrv.limits.disk}`);
+
+    // Format List Server untuk Log
+    devLog(`\n[TOTAL SERVER DIMILIKI: ${res.total_owned_servers}]`);
+    
+    // Mapping list server agar rapi di log
+    const serverListString = owned.map(s => {
+        return `\n- [ID:${s.id}] ${s.name} (${s.status})\n  Limits: ${s.limits_formatted}`;
+    }).join("");
+
+    devLog(serverListString);
+    devLog("----------------------------------------");
+    devLog("Selesai.");
+
+    // Update Tabel Riwayat
+    const tr = document.createElement("tr");
+    
+    // Tentukan tampilan password (jika user lama, password tidak berubah)
+    const passDisplayV3 =
+  acc.password && acc.password.includes("Unchanged")
+  ? "(User Lama)"
+  : acc.password || "-";
+
+    tr.innerHTML = `
+      <td>
+        ${acc.username}<br>
+        <a href="#" onclick="navigator.clipboard.writeText('${acc.username}');return false;">Copy</a>
+      </td>
+      <td>
+        ${passDisplayV3}<br>
+        <a href="#" onclick="navigator.clipboard.writeText('${passDisplayV3}');return false;">Copy</a>
+      </td>
+      <td>
+        <a href="${PANEL_DOMAIN}" target="_blank" class="login-link">domain</a>
+      </td>
+    `;
+    document.getElementById("historyV3").appendChild(tr);
+
+    alert(`Sukses! Server berhasil dibuat. Total server user sekarang: ${res.total_owned_servers}`);
+
+  } catch (e) {
+    console.error(e);
+    devLog(`[FATAL ERROR] Gagal menghubungi API Wrapper.`);
+    alert("Terjadi kesalahan koneksi.");
+  }
+}
+
+// ================= ADMIN =================
+async function createAdmin() {
+  const username = document.getElementById("usernameV2").value.trim();
+
+  if (!username) {
+    alert("Masukan Username");
+    return;
+  }
+
+  const password = username + "00019";
+
+  try {
+    const r = await fetch(`${PANEL_DOMAIN}/api/application/users`, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + API_KEY
+      },
+      body: JSON.stringify({
+        email: username + "@vinzz.com",
+        username: username,
+        first_name: "admin",
+        last_name: username,
+        language: "en",
+        root_admin: true,
+        password: password
+      })
+    });
+
+    const j = await r.json();
+
+    if (j.errors) {
+      adminLog("ERROR: " + JSON.stringify(j.errors[0]));
+      return;
+    }
+
+    adminLog("✅ ADMIN BERHASIL DIBUAT");
+    adminLog("USERNAME : " + username);
+    adminLog("PASSWORD : " + password);
+
+  } catch (e) {
+    adminLog("❌ GAGAL BUAT ADMIN");
+  }
+}
+
+async function createAdminV2() {
+  const username = document.getElementById("usernameV3").value.trim();
+
+  if (!username) {
+    alert("Masukan Username");
+    return;
+  }
+
+  const password = username + "00019";
+
+  try {
+    const r = await fetch(`${PANEL_DOMAIN}/api/application/users`, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + API_KEY
+      },
+      body: JSON.stringify({
+        email: username + "@vinzz.com",
+        username: username,
+        first_name: username,
+        last_name: "ADMIN PANEL VINZZ",
+        language: "en",
+        root_admin: true,
+        password: password
+      })
+    });
+
+    const j = await r.json();
+
+    if (j.errors) {
+      devLog("ERROR: " + JSON.stringify(j.errors[0]));
+      return;
+    }
+
+    devLog("✅ ADMIN BERHASIL DIBUAT");
+    devLog("USERNAME : " + username);
+    devLog("PASSWORD : " + password);
+
+  } catch (e) {
+    devLog("❌ GAGAL BUAT ADMIN");
+  }
+}
+
+const headers = {
+  "Accept":"application/json",
+  "Content-Type":"application/json",
+  "Authorization":"Bearer "+API_KEY
+};
+
+async function listServers(){
+  adminLogEl.textContent="";
+  const r = await fetch(`${PANEL_DOMAIN}/api/application/servers?page=1`,{headers});
+  const j = await r.json();
+  if(!j.data) return;
+
+  j.data.forEach(s=>{
+    const a=s.attributes;
+    adminLog(`ID:${a.id} | ${a.name} | RAM:${a.limits.memory}`);
+  });
+}
+
+async function deleteServer(){
+  const id = prompt("ID Server?");
+  if(!id) return;
+  await fetch(`${PANEL_DOMAIN}/api/application/servers/${id}`,{method:"DELETE",headers});
+  adminLog("Server "+id+" dihapus");
+}
+
+async function listServersV2(){
+  devLogEl.textContent="";
+  const r = await fetch(`${PANEL_DOMAIN}/api/application/servers?page=1`,{headers});
+  const j = await r.json();
+  if(!j.data) return;
+
+  j.data.forEach(s=>{
+    const a=s.attributes;
+    devLog(`ID:${a.id} | ${a.name} | RAM:${a.limits.memory}`);
+  });
+}
+
+async function deleteServerV2(){
+  const id = prompt("ID Server?");
+  if(!id) return;
+  await fetch(`${PANEL_DOMAIN}/api/application/servers/${id}`,{method:"DELETE",headers});
+  devLog("Server "+id+" dihapus");
+}
+
+async function deleteAdmin(){
+  const r = await fetch(`${PANEL_DOMAIN}/api/application/users?page=1`,{headers});
+  const j = await r.json();
+  const admins = j.data.filter(x=>x.attributes.root_admin);
+  let txt = admins.map(a=>`${a.attributes.id} - ${a.attributes.username}`).join("\n");
+  const id = prompt("Admin:\n"+txt+"\n\nID?");
+  if(!id) return;
+  await fetch(`${PANEL_DOMAIN}/api/application/users/${id}`,{method:"DELETE",headers});
+  devLog("Admin "+id+" dihapus");
+}
+
+async function clearServer(){
+  if(!confirm("HAPUS SEMUA SERVER & USER NON ADMIN?")) return;
+
+  const u = await fetch(`${PANEL_DOMAIN}/api/application/users?page=1`,{headers});
+  const s = await fetch(`${PANEL_DOMAIN}/api/application/servers?page=1`,{headers});
+  const users=(await u.json()).data;
+  const servers=(await s.json()).data;
+
+  for(const user of users){
+    if(user.attributes.root_admin) continue;
+    servers.filter(x=>x.attributes.user===user.attributes.id)
+      .forEach(async srv=>{
+        await fetch(`${PANEL_DOMAIN}/api/application/servers/${srv.attributes.id}`,{method:"DELETE",headers});
+      });
+    await fetch(`${PANEL_DOMAIN}/api/application/users/${user.attributes.id}`,{method:"DELETE",headers});
+  }
+  devLog("CLEAR SELESAI");
+}
+</script>
+
+</body>
+</html>
