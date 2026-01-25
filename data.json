@@ -18,6 +18,12 @@
       "password": "1",
       "role": "admin",
       "lock": true
+    },
+    {
+      "username": "vin",
+      "password": "1",
+      "role": "user",
+      "lock": false
     }
   ]
 }
