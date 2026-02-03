@@ -569,7 +569,7 @@ const PANEL_DOMAIN = "https://panel.vinzzoffc.my.id";
 const API_KEY = "ptla_dAIgAh2SedYsIzjk62gtZrR0GEvtXCs4zZ79cUnwexz";
 const LOCATION_ID = 1;
 const EGG_ID = 15;
-const NEST_ID = 5;
+const NEST_ID = 1;
 
 function log(t){ 
   const el = document.getElementById("log");
@@ -768,7 +768,7 @@ const headers = { "Accept":"application/json", "Content-Type":"application/json"
 async function listServers() {
   adminLogEl.textContent = "Loading data server...";
   const eggid = document.getElementById("egg") ? document.getElementById("egg").value : "15"; 
-  const nestid = document.getElementById("nest") ? document.getElementById("nest").value : "5";
+  const nestid = document.getElementById("nest") ? document.getElementById("nest").value : "1";
   const loc = document.getElementById("location") ? document.getElementById("location").value : "1";
   const ptlc = typeof API_KEY_CLIENT !== 'undefined' ? API_KEY_CLIENT : API_KEY; 
   try {
@@ -789,7 +789,7 @@ async function listServers() {
 async function listServersV2() {
   devLogEl.textContent = "Loading data server (V2)...";
   const eggid = document.getElementById("egg") ? document.getElementById("egg").value : "15"; 
-  const nestid = document.getElementById("nest") ? document.getElementById("nest").value : "5";
+  const nestid = document.getElementById("nest") ? document.getElementById("nest").value : "1";
   const loc = document.getElementById("location") ? document.getElementById("location").value : "1";
   const ptlc = typeof API_KEY_CLIENT !== 'undefined' ? API_KEY_CLIENT : API_KEY; 
   try {
