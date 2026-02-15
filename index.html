@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Devil Panel - Advanced Server Management System">
+<meta name="keywords" content="Devil Panel, Pterodactyl, Server Manager">
+<meta name="author" content="VinzzOfficial">
+<meta name="robots" content="index, follow">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Devil Panel | Advanced Dashboard</title>
+<link rel="icon" type="image/jpg" href="https://img2.pixhost.to/images/5444/690511451_zakkistore.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --primary: #00f2ff;
+  --secondary: #7000ff;
+  --bg-dark: #050505;
+  --glass: rgba(20, 20, 20, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text: #ffffff;
+  --success: #00ff88;
+  --danger: #ff0055;
+}
+
+* { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.2) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.15) 0%, transparent 20%);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 4px; }
+
+h1, h2, h3 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, var(--text), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+  text-align: center;
+}
+
+.container {
+  width: 90%;
+  max-width: 800px;
+  margin: 20px auto;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+  animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--secondary), var(--primary), var(--secondary));
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+input, select {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: var(--primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+input:focus, select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin: 15px 0 5px 0;
+  background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover {
+  background: var(--primary);
+  color: #000;
+  box-shadow: 0 0 30px rgba(0, 242, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+button:active { transform: scale(0.98); }
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #555;
+  color: #555;
+}
+
+.hidden { display: none !important; }
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  margin-top: 20px;
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+  color: var(--secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--secondary);
+}
+
+td {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  border: 1px solid transparent;
+  transition: 0.3s;
+  vertical-align: middle;
+}
+
+tr:hover td {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary);
+}
+
+td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+table button {
+  width: auto;
+  padding: 5px 10px;
+  margin: 0;
+  font-size: 11px;
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+table button:hover {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: 0 0 10px var(--danger);
+}
+
+pre {
+  background: #000;
+  border: 1px solid #333;
+  padding: 15px;
+  border-radius: 8px;
+  color: var(--success);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  overflow-x: auto;
+  max-height: 300px;
+  white-space: pre-wrap;
+  margin-top: 20px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+a:hover {
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--primary);
+}
+
+hr { border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 20px 0; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+#loginBox { max-width: 400px; text-align: center; }
+.input-group { position: relative; width: 100%; }
+.input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #666; }
+.input-group input { padding-left: 45px; }
+
+</style>
+</head>
+
+<body>
+
+<div id="loginBox" class="container">
+  <img src="https://img2.pixhost.to/images/5444/690511451_zakkistore.jpg" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); box-shadow: 0 0 20px var(--primary); margin: 0 auto 20px auto; display:block;">
+  <h2><i class="fa-solid fa-shield-halved"></i> LOGIN PANEL</h2>
+  <div class="input-group">
+    <i class="fa-solid fa-user"></i>
+    <input id="loginUser" placeholder="Username" autocomplete="off">
+  </div>
+  <div class="input-group">
+    <i class="fa-solid fa-lock"></i>
+    <input id="loginPass" type="password" placeholder="Password">
+  </div>
+  <button onclick="login()"><i class="fa-solid fa-right-to-bracket"></i> LOGIN</button>
+  <p style="margin-top:20px; font-size: 12px; color: #888; text-align:center;">
+    Belum punya akun? hubungi admin  
+    <a href="https://wa.me/6283832320022" target="_blank">Chat</a>
+  </p>
+</div>
+
+<div id="userPanel" class="container hidden">
+  <h2><i class="fa-solid fa-bolt"></i> User Panel</h2>
+  <div class="input-group">
+    <i class="fa-solid fa-server"></i>
+    <input id="username" placeholder="Username">
+  </div>
+  <select id="ramSelect">
+    <option value="">-- Pilih Ram --</option>
+    <option value="1">1GB</option>
+    <option value="2">2GB</option>
+    <option value="3">3GB</option>
+    <option value="4">4GB</option>
+    <option value="5">5GB</option>
+    <option value="6">6GB</option>
+    <option value="7">7GB</option>
+    <option value="8">8GB</option>
+    <option value="9">9GB</option>
+    <option value="10">10GB</option>
+    <option value="0">Unlimited</option>
+  </select>
+
+  <button onclick="createPanel()"><i class="fa-solid fa-rocket"></i> Create Panel</button>
+  <div style="text-align:right;font-size:12px;opacity:0.6;margin-top:10px;">
+    <a href="#" onclick="logout()"><i class="fa-solid fa-power-off"></i> logout</a>
+  </div>
+</div>
+<h1></h1>
+<div id="userPanelV2" class="container hidden">
+  <h3><i class="fa-solid fa-clock-rotate-left"></i> RIWAYAT CREATE</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Link login</th>
+      </tr>
+    </thead>
+    <tbody id="history"></tbody>
+  </table>
+  <pre id="log"><i class="fa-solid fa-terminal"></i> System Ready...</pre>
+  <p style="margin-top:15px; font-size: 12px; opacity: 0.7; text-align:center;">
+    ada kendala eror? hubungi developer
+    <a href="https://wa.me/6283832320022" target="_blank">Chat</a>
+  </p>
+</div>
+
+<div id="adminPanel" class="container hidden">
+  <h2><i class="fa-solid fa-user-shield"></i> Admin Panel</h2>
+  <div class="input-group">
+    <i class="fa-solid fa-user-tag"></i>
+    <input id="usernameV2" placeholder="Username">
+  </div>
+  <select id="ramSelectV2">
+    <option value="">-- Pilih Ram --</option>
+    <option value="1">1GB</option>
+    <option value="2">2GB</option>
+    <option value="3">3GB</option>
+    <option value="4">4GB</option>
+    <option value="5">5GB</option>
+    <option value="6">6GB</option>
+    <option value="7">7GB</option>
+    <option value="8">8GB</option>
+    <option value="9">9GB</option>
+    <option value="10">10GB</option>
+    <option value="0">Unlimited</option>
+  </select>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <button onclick="createPanelV2()"><i class="fa-solid fa-rocket"></i> Create Panel</button>
+    <button onclick="createAdmin()"><i class="fa-solid fa-crown"></i> Create Admin Panel</button>
+  </div>
+  <hr>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <button onclick="listServers()"><i class="fa-solid fa-list"></i> List Server</button>
+    <button onclick="deleteServer()" style="border-color: var(--danger); color: var(--danger);"><i class="fa-solid fa-trash"></i> Delete Server</button>
+  </div>
+  <div style="text-align:right;font-size:12px;opacity:0.6;margin-top:10px;">
+    <a href="#" onclick="logout()"><i class="fa-solid fa-power-off"></i> logout</a>
+  </div>
+</div>
+<h1></h1>
+<div id="adminPanelV2" class="container hidden">
+  <h3><i class="fa-solid fa-file-signature"></i> RIWAYAT CREATE</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Link login</th>
+      </tr>
+    </thead>
+    <tbody id="historyV2"></tbody>
+  </table>
+  <pre id="adminLog"><i class="fa-solid fa-terminal"></i> Waiting for commands...</pre>
+</div>
+
+<div id="devPanel" class="container hidden">
+  <h2><i class="fa-brands fa-dev"></i> Developer Panel</h2>
+  <div class="input-group">
+     <i class="fa-solid fa-code"></i>
+    <input id="usernameV3" placeholder="Username (Create) / ID (Delete)">
+  </div>
+  <select id="ramSelectV3">
+    <option value="">-- Pilih Ram --</option>
+    <option value="1">1GB</option>
+    <option value="2">2GB</option>
+    <option value="3">3GB</option>
+    <option value="4">4GB</option>
+    <option value="5">5GB</option>
+    <option value="6">6GB</option>
+    <option value="7">7GB</option>
+    <option value="8">8GB</option>
+    <option value="9">9GB</option>
+    <option value="10">10GB</option>
+    <option value="0">Unlimited</option>
+  </select>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <button onclick="createPanelV3()"><i class="fa-solid fa-rocket"></i> Create Panel</button>
+    <button onclick="createAdminV2()"><i class="fa-solid fa-user-secret"></i> Create Admin Panel</button>
+  </div>
+  <hr>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <button onclick="listServersV2()">List Server</button>
+    <button onclick="deleteServerV2()">Delete Server</button>
+    <button onclick="deleteAdmin()" style="border-color: var(--danger); color: var(--danger);">Delete User / Admin</button>
+    <button onclick="clearServer()" style="background: var(--danger); color: #fff; border:none;">Clear All</button>
+  </div>
+  <div style="text-align:right;font-size:12px;opacity:0.6;margin-top:10px;">
+    <a href="#" onclick="logout()"><i class="fa-solid fa-power-off"></i> logout</a>
+  </div>
+</div>
+<h1></h1>
+<div id="devPanelV2" class="container hidden">
+  <h3><i class="fa-solid fa-database"></i> RIWAYAT CREATE</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Login</th>
+      </tr>
+    </thead>
+    <tbody id="historyV3"></tbody>
+  </table>
+  <pre id="devLog"><i class="fa-solid fa-terminal"></i> Kernel Active...</pre>
+</div>
+
+<div id="regmenu" class="container hidden">
+  <h1><i class="fa-solid fa-user-plus"></i> REGISTER USER</h1>
+  <div class="input-group">
+    <i class="fa-solid fa-user"></i>
+    <input id="regUser" placeholder="Username">
+  </div>
+  <div class="input-group">
+    <i class="fa-solid fa-lock"></i>
+    <input id="regPass" type="password" placeholder="Password">
+  </div>
+  <select id="regRole">
+    <option value="user">User</option>
+    <option value="admin">Admin</option>
+  </select>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <button onclick="register()"><i class="fa-solid fa-plus"></i> REGISTER</button>
+    <button onclick="clearUser()" style="border-color: var(--danger); color:var(--danger);"><i class="fa-solid fa-fire"></i> CLEAR USER</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>USER</th>
+        <th>PASS</th>
+        <th>ROLE</th>
+        <th>AKSI</th>
+      </tr>
+    </thead>
+    <tbody id="userList"></tbody>
+  </table>
+
+  <pre id="regLog">Ready.</pre>
+  <div style="text-align:right;font-size:12px;opacity:0.6;margin-top:10px;">
+    <a href="#" onclick="logout()"><i class="fa-solid fa-power-off"></i> logout</a>
+  </div>
+</div>
+
+<script>
+const DATA_URL="https://raw.githubusercontent.com/VinzzOfficial/web-panel/main/data.json";
+const loginBox=document.getElementById("loginBox");
+const GITHUB_OWNER="VinzzOfficial";
+const GITHUB_REPO="web-panel";
+const FILE_PATH="data.json";
+const GITHUB_TOKEN="g"+"h"+"p_"+"J3UOxEVs3vhsA8D1CqVTh4Ddjeff"+"qL3lNofr";
+const SESSION_TIMEOUT = 5 * 24 * 60 * 60 * 1000;
+ 
+function saveSessionLog(key, content) {
+  sessionStorage.setItem(key, content);
+}
+function loadSessionLogs() {
+  if(sessionStorage.getItem('logContent')) document.getElementById("log").textContent = sessionStorage.getItem('logContent');
+  if(sessionStorage.getItem('adminLogContent')) document.getElementById("adminLog").textContent = sessionStorage.getItem('adminLogContent');
+  if(sessionStorage.getItem('devLogContent')) document.getElementById("devLog").textContent = sessionStorage.getItem('devLogContent');
+  if(sessionStorage.getItem('histContent')) document.getElementById("history").innerHTML = sessionStorage.getItem('histContent');
+  if(sessionStorage.getItem('histV2Content')) document.getElementById("historyV2").innerHTML = sessionStorage.getItem('histV2Content');
+  if(sessionStorage.getItem('histV3Content')) document.getElementById("historyV3").innerHTML = sessionStorage.getItem('histV3Content');
+}
+
+function regLog(t){ 
+  const el = document.getElementById("log");
+  el.textContent+=t+"\n";
+}
+
+async function loadData(){
+  const r=await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${FILE_PATH}`,{headers:{Authorization:`token ${GITHUB_TOKEN}`}});
+  const d=await r.json();
+  return {sha:d.sha,list:JSON.parse(atob(d.content)).data};
+}
+
+async function saveData(list,sha){
+  await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${FILE_PATH}`,{method:"PUT",headers:{Authorization:`token ${GITHUB_TOKEN}`,"Content-Type":"application/json"},body:JSON.stringify({message:"update user",content:btoa(JSON.stringify({success:true,data:list},null,2)),sha})});
+}
+
+async function register(){
+  const u=regUser.value.trim();
+  const p=regPass.value.trim();
+  const r=regRole.value;
+  if(!u||!p) return alert("Lengkapi data");
+  const {list,sha}=await loadData();
+  if(list.find(x=>x.username===u)) return alert("Username sudah ada");
+  list.push({username:u,password:p,role:r,lock:r!=="user"});
+  await saveData(list,sha);
+  regUser.value=""; regPass.value=""; listUser();
+  regLog(`username: ${u} | password: ${p}\nrole: ${r} | status: succesadded`);
+}
+
+async function listUser(){
+  const {list} = await loadData();
+  const userList = document.getElementById("userList");
+  userList.innerHTML = "";
+  list.forEach(u => {
+    const disable = u.role === "developer" || u.role === "register";
+    userList.innerHTML += `<tr><td>${u.username}</td><td>${u.password}</td><td>${u.role.toUpperCase()}</td><td><button ${disable ? "disabled" : ""} onclick="deleteUser('${u.username}')">Dell</button></td></tr>`;
+  });
+}
+
+async function deleteUser(username){
+  if(!confirm("Hapus user "+username+"?")) return;
+  const {list, sha} = await loadData();
+  const target = list.find(x => x.username === username);
+  if(!target) return alert("User tidak ditemukan");
+  if(target.role === "developer" || target.role === "register") return alert("User dengan role developer atau register tidak bisa dihapus!");
+  await saveData(list.filter(x => x.username !== username), sha);
+  listUser();
+  regLog("success delete "+username);
+}
+
+async function clearUser(){
+  if(!confirm("Hapus semua user dan admin (developer & register aman)?")) return;
+  const {list, sha} = await loadData();
+  const filtered = list.filter(u => u.role === "developer" || u.role === "register");
+  await saveData(filtered, sha);
+  listUser();
+  regLog('success clear user');
+}
+
+document.addEventListener("DOMContentLoaded",listUser);
+
+async function login(){
+  const u=loginUser.value.trim();
+  const p=loginPass.value.trim();
+  const r=await fetch(DATA_URL);
+  const j=await r.json();
+  const acc=j.data.find(x=>x.username===u&&x.password===p);
+  if(!acc) return alert("Login gagal");
+  localStorage.setItem("userLogin",JSON.stringify(acc));
+  localStorage.setItem("sessionStart", Date.now());
+  sessionStorage.clear();
+  init();
+}
+
+function init(){
+  const s=localStorage.getItem("userLogin");
+  const t=localStorage.getItem("sessionStart");
+  
+  if(!s){ 
+    loginBox.classList.remove("hidden"); 
+    return; 
+  }
+  
+  if(t && (Date.now() - parseInt(t) > SESSION_TIMEOUT)) {
+    alert("Sesi kedaluwarsa (5 menit). Silakan login kembali.");
+    logout();
+    return;
+  }
+
+  document.querySelectorAll(".container").forEach(x=>x.classList.add("hidden"));
+  const me=JSON.parse(s);
+  loadSessionLogs();
+
+  if(me.role==="user"){ userPanel.classList.remove("hidden"); userPanelV2.classList.remove("hidden"); }
+  if(me.role==="admin"){ adminPanel.classList.remove("hidden"); adminPanelV2.classList.remove("hidden"); }
+  if(me.role==="developer"){ devPanel.classList.remove("hidden"); devPanelV2.classList.remove("hidden"); }
+  if(me.role==="register"){ regmenu.classList.remove("hidden"); }
+  
+  setInterval(() => {
+    const st = localStorage.getItem("sessionStart");
+    if(st && (Date.now() - parseInt(st) > SESSION_TIMEOUT)) {
+      logout();
+    }
+  }, 10000);
+}
+
+function logout(){ localStorage.clear(); sessionStorage.clear(); location.reload(); }
+
+init();
+
+const WRAPPER_API = "https://payment.zpr0.com/api/pterodactyl/create2";
+const PANEL_DOMAIN = "https://panel.devil-fight.web.id";
+const API_KEY = "ptla_Iw1yZcU8GmjHE0U7l9IgPm258PCGtIPxveL3xzbKj8V";
+const LOCATION_ID = 1;
+const EGG_ID = 15;
+const NEST_ID = 1;
+
+function log(t){ 
+  const el = document.getElementById("log");
+  el.textContent+=t+"\n"; 
+  saveSessionLog('logContent', el.textContent);
+}
+const adminLogEl = document.getElementById("adminLog");
+function adminLog(t){ 
+  adminLogEl.textContent+=t+"\n"; 
+  saveSessionLog('adminLogContent', adminLogEl.textContent);
+}
+const devLogEl = document.getElementById("devLog");
+function devLog(t){ 
+  devLogEl.textContent+=t+"\n"; 
+  saveSessionLog('devLogContent', devLogEl.textContent);
+}
+
+async function createPanel() {
+  const username = document.getElementById("username").value.trim();
+  const ramVal = document.getElementById("ramSelect").value;
+  if (!username) return alert("Username kosong");
+  if (ramVal === "") return alert("Pilih RAM");
+  log("=== MEMULAI PROSES CREATE ===");
+  log(`Mengirim request ke API untuk user: ${username}...`);
+  const ramMB = ramVal == 0 ? 0 : ramVal * 1024;
+  const requestUrl = `${WRAPPER_API}?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&loc=${LOCATION_ID}&eggid=${EGG_ID}&nestid=${NEST_ID}&ram=${ramMB}&disk=10000&cpu=0&username=${encodeURIComponent(username)}`;
+  try {
+    const response = await fetch(requestUrl, { method: "GET" });
+    const data = await response.json();
+    if (!data.status) {
+        log(`[ERROR] ${data.message}`);
+        if(data.detail) log(`Detail: ${JSON.stringify(data.detail)}`);
+        return alert("Gagal: " + data.message);
+    }
+    const res = data.result;
+    const acc = res.account_info;
+    const newSrv = res.new_server_created;
+    const owned = res.owned_servers_list;
+    log(`\n[INFO AKUN]`);
+    log(`ID       : ${acc.id}`);
+    log(`Username : ${acc.username}`);
+    log(`Email    : ${acc.email}`);
+    log(`Password : ${acc.password}`);
+    log(`Domain   : ${PANEL_DOMAIN}`);
+    log(`\n[SERVER BARU DIBUAT]`);
+    log(`Nama     : ${newSrv.name}`);
+    log(`Limit    : RAM ${newSrv.limits.ram} | Disk ${newSrv.limits.disk}`);
+    log(`\n[TOTAL SERVER DIMILIKI: ${res.total_owned_servers}]`);
+    const serverListString = owned.map(s => { return `\n- [ID:${s.id}] ${s.name} (${s.status})\n  Limits: ${s.limits_formatted}`; }).join("");
+    log(serverListString);
+    log("----------------------------------------");
+    log("Selesai.");
+    const tr = document.createElement("tr");
+    const passDisplay = acc.password && acc.password.includes("Unchanged") ? "(User Lama)" : acc.password || "-";
+    tr.innerHTML = `<td>${acc.username}<br><a href="#" onclick="navigator.clipboard.writeText('${acc.username}');return false;">Copy</a></td><td>${passDisplay}<br><a href="#" onclick="navigator.clipboard.writeText('${passDisplay}');return false;">Copy</a></td><td><a href="${PANEL_DOMAIN}" target="_blank" class="login-link">domain</a></td>`;
+    document.getElementById("history").appendChild(tr);
+    saveSessionLog('histContent', document.getElementById("history").innerHTML);
+    alert(`Sukses! Server berhasil dibuat. Total server user sekarang: ${res.total_owned_servers}`);
+  } catch (e) {
+    console.error(e);
+    log(`[FATAL ERROR] Gagal menghubungi API Wrapper.`);
+    alert("Terjadi kesalahan koneksi.");
+  }
+}
+
+async function createPanelV2() {
+  const username = document.getElementById("usernameV2").value.trim();
+  const ramVal = document.getElementById("ramSelectV2").value;
+  if (!username) return alert("Username kosong");
+  if (ramVal === "") return alert("Pilih RAM");
+  adminLog("=== MEMULAI PROSES CREATE ===");
+  adminLog(`Mengirim request ke API untuk user: ${username}...`);
+  const ramMB = ramVal == 0 ? 0 : ramVal * 1024;
+  const requestUrl = `${WRAPPER_API}?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&loc=${LOCATION_ID}&eggid=${EGG_ID}&nestid=${NEST_ID}&ram=${ramMB}&disk=10000&cpu=0&username=${encodeURIComponent(username)}`;
+  try {
+    const response = await fetch(requestUrl, { method: "GET" });
+    const data = await response.json();
+    if (!data.status) {
+        adminLog(`[ERROR] ${data.message}`);
+        if(data.detail) adminLog(`Detail: ${JSON.stringify(data.detail)}`);
+        return alert("Gagal: " + data.message);
+    }
+    const res = data.result;
+    const acc = res.account_info;
+    const newSrv = res.new_server_created;
+    const owned = res.owned_servers_list;
+    adminLog(`\n[INFO AKUN]`);
+    adminLog(`ID       : ${acc.id}`);
+    adminLog(`Username : ${acc.username}`);
+    adminLog(`Email    : ${acc.email}`);
+    adminLog(`Password : ${acc.password}`);
+    adminLog(`Domain   : ${PANEL_DOMAIN}`);
+    adminLog(`\n[SERVER BARU DIBUAT]`);
+    adminLog(`Nama     : ${newSrv.name}`);
+    adminLog(`Limit    : RAM ${newSrv.limits.ram} | Disk ${newSrv.limits.disk}`);
+    adminLog(`\n[TOTAL SERVER DIMILIKI: ${res.total_owned_servers}]`);
+    const serverListString = owned.map(s => { return `\n- [ID:${s.id}] ${s.name} (${s.status})\n  Limits: ${s.limits_formatted}`; }).join("");
+    adminLog(serverListString);
+    adminLog("----------------------------------------");
+    adminLog("Selesai.");
+    const tr = document.createElement("tr");
+    const passDisplayV2 = acc.password && acc.password.includes("Unchanged") ? "(User Lama)" : acc.password || "-";
+    tr.innerHTML = `<td>${acc.username}<br><a href="#" onclick="navigator.clipboard.writeText('${acc.username}');return false;">Copy</a></td><td>${passDisplayV2}<br><a href="#" onclick="navigator.clipboard.writeText('${passDisplayV2}');return false;">Copy</a></td><td><a href="${PANEL_DOMAIN}" target="_blank" class="login-link">domain</a></td>`;
+    document.getElementById("historyV2").appendChild(tr);
+    saveSessionLog('histV2Content', document.getElementById("historyV2").innerHTML);
+    alert(`Sukses! Server berhasil dibuat. Total server user sekarang: ${res.total_owned_servers}`);
+  } catch (e) {
+    console.error(e);
+    adminLog(`[FATAL ERROR] Gagal menghubungi API Wrapper.`);
+    alert("Terjadi kesalahan koneksi.");
+  }
+}
+
+async function createPanelV3() {
+  const username = document.getElementById("usernameV3").value.trim();
+  const ramVal = document.getElementById("ramSelectV3").value;
+  if (!username) return alert("Username kosong");
+  if (ramVal === "") return alert("Pilih RAM");
+  devLog("=== MEMULAI PROSES CREATE ===");
+  devLog(`Mengirim request ke API untuk user: ${username}...`);
+  const ramMB = ramVal == 0 ? 0 : ramVal * 1024;
+  const requestUrl = `${WRAPPER_API}?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&loc=${LOCATION_ID}&eggid=${EGG_ID}&nestid=${NEST_ID}&ram=${ramMB}&disk=10000&cpu=0&username=${encodeURIComponent(username)}`;
+  try {
+    const response = await fetch(requestUrl, { method: "GET" });
+    const data = await response.json();
+    if (!data.status) {
+        devLog(`[ERROR] ${data.message}`);
+        if(data.detail) devLog(`Detail: ${JSON.stringify(data.detail)}`);
+        return alert("Gagal: " + data.message);
+    }
+    const res = data.result;
+    const acc = res.account_info;
+    const newSrv = res.new_server_created;
+    const owned = res.owned_servers_list;
+    devLog(`\n[INFO AKUN]`);
+    devLog(`ID       : ${acc.id}`);
+    devLog(`Username : ${acc.username}`);
+    devLog(`Email    : ${acc.email}`);
+    devLog(`Password : ${acc.password}`);
+    devLog(`Domain   : ${PANEL_DOMAIN}`);
+    devLog(`\n[SERVER BARU DIBUAT]`);
+    devLog(`Nama     : ${newSrv.name}`);
+    devLog(`Limit    : RAM ${newSrv.limits.ram} | Disk ${newSrv.limits.disk}`);
+    devLog(`\n[TOTAL SERVER DIMILIKI: ${res.total_owned_servers}]`);
+    const serverListString = owned.map(s => { return `\n- [ID:${s.id}] ${s.name} (${s.status})\n  Limits: ${s.limits_formatted}`; }).join("");
+    devLog(serverListString);
+    devLog("----------------------------------------");
+    devLog("Selesai.");
+    const tr = document.createElement("tr");
+    const passDisplayV3 = acc.password && acc.password.includes("Unchanged") ? "(User Lama)" : acc.password || "-";
+    tr.innerHTML = `<td>${acc.username}<br><a href="#" onclick="navigator.clipboard.writeText('${acc.username}');return false;">Copy</a></td><td>${passDisplayV3}<br><a href="#" onclick="navigator.clipboard.writeText('${passDisplayV3}');return false;">Copy</a></td><td><a href="${PANEL_DOMAIN}" target="_blank" class="login-link">domain</a></td>`;
+    document.getElementById("historyV3").appendChild(tr);
+    saveSessionLog('histV3Content', document.getElementById("historyV3").innerHTML);
+    alert(`Sukses! Server berhasil dibuat. Total server user sekarang: ${res.total_owned_servers}`);
+  } catch (e) {
+    console.error(e);
+    devLog(`[FATAL ERROR] Gagal menghubungi API Wrapper.`);
+    alert("Terjadi kesalahan koneksi.");
+  }
+}
+
+async function createAdmin() {
+  const username = document.getElementById("usernameV2").value.trim();
+  if (!username) { alert("Masukan Username"); return; }
+  const password = username + "00019";
+  const firstName = "admin";
+  const lastName = username;
+  try {
+    const r = await fetch(`https://payment.zpr0.com/api/pterodactyl/create-admin?domain=${encodeURIComponent(PANEL_DOMAIN)}&key=${encodeURIComponent(API_KEY)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&firstname=${encodeURIComponent(firstName)}&lastname=${encodeURIComponent(lastName)}`);
+    const j = await r.json();
+    if (j.errors) { adminLog("ERROR: " + JSON.stringify(j.errors[0])); return; }
+    adminLog("✅ ADMIN BERHASIL DIBUAT 1");
+    adminLog("USERNAME : " + username);
+    adminLog("PASSWORD : " + password);
+  } catch (e) { adminLog("❌ GAGAL BUAT ADMIN 1"); }
+}
+
+async function createAdminV2() {
+  const username = document.getElementById("usernameV3").value.trim();
+  if (!username) { alert("Masukan Username"); return; }
+  const password = username + "00019";
+  const firstName = username;
+  const lastName = "ADMIN PANEL DEVIL";
+  try {
+    const r = await fetch(`https://payment.zpr0.com/api/pterodactyl/create-admin?domain=${encodeURIComponent(PANEL_DOMAIN)}&key=${encodeURIComponent(API_KEY)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&firstname=${encodeURIComponent(firstName)}&lastname=${encodeURIComponent(lastName)}`);
+    const j = await r.json();
+    if (j.errors) { devLog("ERROR: " + JSON.stringify(j.errors[0])); return; }
+    devLog("✅ ADMIN BERHASIL DIBUAT 2");
+    devLog("USERNAME : " + username);
+    devLog("PASSWORD : " + password);
+  } catch (e) { devLog("❌ GAGAL BUAT ADMIN 2"); }
+}
+
+const headers = { "Accept":"application/json", "Content-Type":"application/json", "Authorization":"Bearer "+API_KEY };
+
+async function listServers() {
+  adminLogEl.textContent = "Loading data server...";
+  const eggid = document.getElementById("egg") ? document.getElementById("egg").value : "15"; 
+  const nestid = document.getElementById("nest") ? document.getElementById("nest").value : "5";
+  const loc = document.getElementById("location") ? document.getElementById("location").value : "1";
+  const ptlc = typeof API_KEY_CLIENT !== 'undefined' ? API_KEY_CLIENT : API_KEY; 
+  try {
+    const url = `https://payment.zpr0.com/api/pterodactyl/listpanel?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&ptlc=${encodeURIComponent(ptlc)}&eggid=${eggid}&nestid=${nestid}&loc=${loc}`;
+    const r = await fetch(url);
+    const j = await r.json();
+    adminLogEl.textContent = ""; 
+    if (!j.status || !j.result) {
+        adminLog("❌ Gagal mengambil data atau tidak ada server.");
+        if(j.message) adminLog("Msg: " + j.message);
+        return;
+    }
+    adminLog(`✅ Ditemukan ${j.totalserver} Server:`);
+    j.result.forEach(s => { adminLog(`ID:${s.id_server} | ${s.name} | RAM:${s.ram}MB | Stat:${s.status_realtime}`); });
+  } catch (e) { adminLog("❌ Error Fetching List: " + e.message); }
+}
+
+async function listServersV2() {
+  devLogEl.textContent = "Loading data server (V2)...";
+  const eggid = document.getElementById("egg") ? document.getElementById("egg").value : "15"; 
+  const nestid = document.getElementById("nest") ? document.getElementById("nest").value : "5";
+  const loc = document.getElementById("location") ? document.getElementById("location").value : "1";
+  const ptlc = typeof API_KEY_CLIENT !== 'undefined' ? API_KEY_CLIENT : API_KEY; 
+  try {
+    const url = `https://payment.zpr0.com/api/pterodactyl/listpanel?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&ptlc=${encodeURIComponent(ptlc)}&eggid=${eggid}&nestid=${nestid}&loc=${loc}`;
+    const r = await fetch(url);
+    const j = await r.json();
+    devLogEl.textContent = ""; 
+    if (!j.status || !j.result) {
+        devLog("❌ Gagal mengambil data (V2).");
+        if(j.message) devLog("Msg: " + j.message);
+        return;
+    }
+    devLog(`✅ TOTAL SERVER: ${j.totalserver}`);
+    j.result.forEach(s => { devLog(`ID:${s.id_server} | ${s.name} | RAM:${s.ram}MB | DISK:${s.disk}MB`); });
+  } catch (e) { devLog("❌ Error V2: " + e.message); }
+}
+
+async function deleteServer() {
+  const id = prompt("Masukan ID Server yang ingin dihapus:");
+  if (!id) return;
+  const confirmDel = confirm(`Yakin ingin menghapus Server ID: ${id}? \n(User dengan nama server tersebut juga akan dihapus sesuai sistem)`);
+  if (!confirmDel) return;
+  adminLog(`⏳ Sedang memproses penghapusan Server ID: ${id}...`);
+  try {
+    const r = await fetch(`https://payment.zpr0.com/api/pterodactyl/delete?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&idserver=${encodeURIComponent(id)}`, { method: "GET" });
+    const result = await r.json();
+    if (result.status === true) { adminLog("✅ " + result.result); } else if (typeof result === 'string') { adminLog("⚠️ " + result); } else { adminLog("❌ Gagal menghapus server. Cek console."); console.log(result); }
+  } catch (e) { adminLog("❌ TERJADI KESALAHAN KONEKSI"); console.error(e); }
+}
+
+async function deleteServerV2() {
+  const id = prompt("Masukan ID Server yang ingin dihapus:");
+  if (!id) return;
+  const confirmDel = confirm(`Yakin ingin menghapus Server ID: ${id}? \n(User dengan nama server tersebut juga akan dihapus sesuai sistem)`);
+  if (!confirmDel) return;
+  devLog(`⏳ Sedang memproses penghapusan Server ID: ${id}...`);
+  try {
+    const r = await fetch(`https://payment.zpr0.com/api/pterodactyl/delete?domain=${encodeURIComponent(PANEL_DOMAIN)}&ptla=${encodeURIComponent(API_KEY)}&idserver=${encodeURIComponent(id)}`, { method: "GET" });
+    const result = await r.json();
+    if (result.status === true) { devLog("✅ " + result.result); } else if (typeof result === 'string') { devLog("⚠️ " + result); } else { devLog("❌ Gagal menghapus server. Cek console."); console.log(result); }
+  } catch (e) { devLog("❌ TERJADI KESALAHAN KONEKSI"); console.error(e); }
+}
+
+async function deleteAdmin() {
+  let id = document.getElementById("usernameV3").value.trim();
+  if (!id) { id = prompt("Masukan ID User (Admin) yang ingin dihapus:"); }
+  if (!id) return alert("ID Kosong! Masukan ID pada form atau prompt");
+  if (!confirm("Yakin hapus Admin ID: " + id + "?")) return;
+  devLog(`⏳ Menghapus Admin ID: ${id}...`);
+  try {
+    const r = await fetch(`https://payment.zpr0.com/api/pterodactyl/delete-admin?domain=${encodeURIComponent(PANEL_DOMAIN)}&key=${encodeURIComponent(API_KEY)}&id=${encodeURIComponent(id)}`);
+    const j = await r.json();
+    if (j.status) {
+      devLog("✅ " + j.message);
+      document.getElementById("usernameV3").value = "";
+    } else {
+      devLog("❌ " + j.message);
+      if (j.detail) console.log(j.detail);
+    }
+  } catch (e) {
+    devLog("❌ Gagal Terhubung ke API");
+    console.error(e);
+  }
+}
+
+async function clearServer() {
+  // Konfirmasi keamanan ganda
+  if (!confirm("⚠️ PERINGATAN BAHAYA ⚠️\n\nApakah Anda yakin ingin MENGHAPUS SEMUA SERVER & USER (Kecuali Admin)?\n\nData server akan hilang setelah dihapus, pertimbangkan tindakan ini karena data tidak bisa kembali.")) return;
+  if (!confirm("Yakin? Tekan OK untuk memusnahkan data.")) return;
+
+  devLog("⏳ REQUESTING CLEAR DATA TO BACKEND...");
+
+  try {
+    // Mengirim request ke endpoint backend baru
+    const r = await fetch(`https://payment.zpr0.com/api/pterodactyl/clear-data?domain=${encodeURIComponent(PANEL_DOMAIN)}&key=${encodeURIComponent(API_KEY)}`);
+    
+    const j = await r.json();
+
+    if (j.status) {
+      devLog("✅ CLEAR DATA SELESAI");
+      devLog(`🗑️ User Dihapus: ${j.details.deleted_users}`);
+      devLog(`🗑️ Server Dihapus: ${j.details.deleted_servers}`);
+      devLog(`🛡️ Admin Aman: ${j.details.skipped_admins}`);
+    } else {
+      devLog("❌ ERROR: " + j.message);
+    }
+
+  } catch (e) {
+    devLog("❌ GAGAL MENGHUBUNGI SERVER BACKEND");
+    console.error(e);
+  }
+}
+
+</script>
+</body>
+</html>
