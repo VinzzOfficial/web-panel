@@ -24,6 +24,12 @@
       "password": "1",
       "role": "user",
       "lock": false
+    },
+    {
+      "username": "hh",
+      "password": "tg",
+      "role": "user",
+      "lock": false
     }
   ]
 }
